@@ -1,0 +1,36 @@
+version: '3.8'
+
+services:
+  php:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: php-filmforge-app
+    ports:
+      - "8080:80"
+    volumes:
+      - ./src:/var/www/html
+    depends_on:
+      - mysql
+
+  mysql:
+    image: mysql:8.1
+    container_name: php-filmforge-mysql
+    ports:
+      - "3306:3306"
+    env_file:
+      - .env
+    volumes:
+      - ./initsql:/docker-entrypoint-initdb.d
+      - ./mysql-data:/var/lib/mysql
+
+  composer:
+    image: composer:2.6
+    container_name: filmforge-composer
+    working_dir: /var/www/html
+    volumes:
+      - ./src:/var/www/html
+    command: composer install --no-interaction --optimize-autoloader
+
+volumes:
+  mysql_data:

@@ -1,0 +1,22 @@
+{
+    "name": "webdev/film-forge",
+    "type": "project",
+    "autoload": {
+        "psr-4": {
+            "Webdev\\Filmforge\\": "app/"
+        }
+    },
+    "files": [
+        "./config.php"
+    ],
+    "authors": [
+        {
+            "name": "vetsinen",
+            "email": "vetsinen@gmail.com"
+        }
+    ],
+    "require": {
+        "monolog/monolog": "^3.5",
+        "ext-mysqli": "*"
+    }
+}

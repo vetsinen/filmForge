@@ -1,0 +1,2 @@
+docker exec -it php-web-app /bin/bash
+composer dump-autoload
