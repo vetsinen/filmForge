@@ -6,9 +6,7 @@
             "Webdev\\Filmforge\\": "app/"
         }
     },
-    "files": [
-        "./config.php"
-    ],
+    "files": ["config.php"],
     "authors": [
         {
             "name": "vetsinen",

@@ -1,5 +1,13 @@
 <?php
-require_once (__DIR__ .'/vendor/autoload.php');
+session_start();
+require_once(__DIR__ . '/vendor/autoload.php');
+
+enum FilmFormat
+{
+    case VHS;
+    case DVD;
+    case BlueRay;
+}
 
 $log = new Monolog\Logger('name');
 $film = new Webdev\Filmforge\Film();
@@ -30,20 +38,23 @@ $conn = new Webdev\Filmforge\MySQLConnection();
     <div class="columns">
         <div class="column">
             <div class="box">
-                <p class="title is-5">Column 1</p>
-                <p>This is some content for column 1.</p>
-            </div>
-        </div>
-        <div class="column">
-            <div class="box">
-                <p class="title is-5">Column 2</p>
-                <p>This is some content for column 2.</p>
-            </div>
-        </div>
-        <div class="column">
-            <div class="box">
-                <p class="title is-5">Column 3</p>
-                <p>This is some content for column 3.</p>
+                <p class="title is-5">uploading column</p>
+                <form action="upload.php" method="post" enctype="multipart/form-data">
+                    <!-- File input -->
+                    <div class="field">
+                        <label class="label">Choose a text file</label>
+                        <div class="control">
+                            <input class="input" type="file" name="file">
+                        </div>
+                    </div>
+
+                    <!-- Submit button -->
+                    <div class="field">
+                        <div class="control">
+                            <button type="submit" class="button is-primary">Upload</button>
+                        </div>
+                    </div>
+                </form>
             </div>
         </div>
     </div>
