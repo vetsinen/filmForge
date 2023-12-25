@@ -2,7 +2,7 @@
 
 namespace Webdev\Filmforge;
 
-class FilmService
+class FilmModel
 {
     public function butchFilmAddingFromTextFile(string $txt) {}
     public function addFilm() {}

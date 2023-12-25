@@ -11,8 +11,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         echo "<h1>File Content:</h1>";
         echo "<pre>" . htmlspecialchars($fileContent) . "</pre>";
 
-        $targetDir = "uploads/";
-        $fileName = basename($_FILES["file"]["name"]);
-        $targetFilePath = $targetDir . $fileName;
+        //TODO change to Dependendency injection
+        $filmModel = new \Webdev\Filmforge\FilmModel(new \Webdev\Filmforge\MySQLConnection());
+
     }
 }
