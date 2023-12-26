@@ -11,7 +11,7 @@ enum FilmFormat
 
 $log = new Monolog\Logger('name');
 $film = new Webdev\Filmforge\Film();
-$conn = new Webdev\Filmforge\MySQLConnection();
+$conn = new Webdev\Filmforge\GenericModel();
 ?>
 <!DOCTYPE html>
 <html lang="en">

@@ -4,7 +4,7 @@ namespace Webdev\Filmforge;
 
 require_once(__DIR__.'/../config.php');
 
-class MySQLConnection
+class GenericModel
 {
     private $connection;
 
@@ -24,6 +24,18 @@ class MySQLConnection
             $rez[] = $row;
         }
         return $rez;
+    }
+
+    public function insertAndProvideId($sql)
+    {
+        if ($this->connection->query($sql) === TRUE) {
+            $last_inserted_id = $this->connection->insert_id;
+            error_log("New record created successfully. ID is: " . $last_inserted_id);
+            return $last_inserted_id;
+        } else {
+            error_log("Error: " . $sql . "<br>" . $this->connection->error);
+            return 0;
+        }
     }
 
     public function __invoke($sql)
