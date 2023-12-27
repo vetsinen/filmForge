@@ -1,7 +1,8 @@
 <?php
-
-class SimpleRouter {
+require_once (__DIR__.'/vendor/autoload.php');
+class Router {
     private $routes = [];
+    private $filmModel;
 
     public function addRoute($method, $pattern, $callback) {
         $this->routes[] = [
@@ -14,7 +15,7 @@ class SimpleRouter {
     public function match($method, $uri) {
         foreach ($this->routes as $route) {
             if ($route['method'] === $method && preg_match($this->patternToRegex($route['pattern']), $uri, $matches)) {
-                array_shift($matches); // Remove the full match
+                array_shift($matches);
                 call_user_func_array($route['callback'], $matches);
                 return;
             }
@@ -28,25 +29,31 @@ class SimpleRouter {
 
     private function notFound() {
         header('HTTP/1.0 404 Not Found');
-        echo '404 Not Found';
+        echo 'route Not Found';
     }
 }
 
-// Usage example:
+$filmModel = new \Webdev\Filmforge\FilmModel(new \Webdev\Filmforge\GenericQuery());
+$router = new Router();
 
-$router = new SimpleRouter();
+$router->addRoute('GET', '/api.php/films', function () use ($filmModel) {
+    $jsonString = json_encode($filmModel->getList());
+    echo $jsonString;
+});
 
-// Define dynamic routes
-$router->addRoute('GET', '/api/user/{id}', function ($userId) {
-    echo "Fetching user with ID: $userId";
+$router->addRoute('GET', '/api.php/films/title/{title}', function ($title) use($filmModel) {
+    echo json_encode($filmModel->getByTitle($title));
 });
 
 $router->addRoute('POST', '/api/post/{id}', function ($postId) {
     echo "Creating a post with ID: $postId";
 });
 
-// Example request
+
+
+// Set the content type to JSON
+header('Content-Type: application/json');
 $requestMethod = $_SERVER['REQUEST_METHOD'];
 $requestUri = $_SERVER['REQUEST_URI'];
-
+error_log(" $requestMethod, $requestUri ");
 $router->match($requestMethod, $requestUri);

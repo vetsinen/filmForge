@@ -2,16 +2,8 @@
 session_start();
 require_once(__DIR__ . '/vendor/autoload.php');
 
-enum FilmFormat
-{
-    case VHS;
-    case DVD;
-    case BlueRay;
-}
-
 $log = new Monolog\Logger('name');
 $film = new Webdev\Filmforge\Film();
-$conn = new Webdev\Filmforge\GenericModel();
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -19,18 +11,15 @@ $conn = new Webdev\Filmforge\GenericModel();
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.9.3/css/bulma.min.css">
-    <title>Simple Bulma Page</title>
+    <title>Films Page</title>
 </head>
 <body>
 
 <section class="section">
     <div class="container">
         <h1 class="title">
-            Welcome to My Bulma Page
+            Films Page
         </h1>
-        <p class="subtitle">
-            Simple HTML page styled with Bulma CSS
-        </p>
     </div>
 </section>
 

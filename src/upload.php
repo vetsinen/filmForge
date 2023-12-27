@@ -10,7 +10,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         $fileContent = file_get_contents($_FILES["file"]["tmp_name"]);
 
         //TODO change to Dependendency injection
-        $filmModel = new \Webdev\Filmforge\FilmModel(new \Webdev\Filmforge\GenericModel());
+        $filmModel = new \Webdev\Filmforge\FilmModel(new \Webdev\Filmforge\GenericQuery());
         $filmModel->butchFilmAddingFromTextFile($_FILES["file"]["tmp_name"]);
         header("Location: index.php");
     }

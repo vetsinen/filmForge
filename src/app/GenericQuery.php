@@ -4,7 +4,7 @@ namespace Webdev\Filmforge;
 
 require_once(__DIR__.'/../config.php');
 
-class GenericModel
+class GenericQuery
 {
     private $connection;
 
