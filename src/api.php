@@ -45,11 +45,13 @@ $router->addRoute('GET', '/api.php/films/title/{title}', function ($title) use($
     echo json_encode($filmModel->getByTitle($title));
 });
 
+$router->addRoute('GET', '/api.php/films/actor/{fullname}', function ($fullname) use($filmModel) {
+    echo json_encode($filmModel->getByTitle($fullname));
+});
+
 $router->addRoute('POST', '/api/post/{id}', function ($postId) {
     echo "Creating a post with ID: $postId";
 });
-
-
 
 // Set the content type to JSON
 header('Content-Type: application/json');

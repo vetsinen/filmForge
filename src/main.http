@@ -2,6 +2,6 @@
 GET http://127.0.0.1:8080/api.php/films
 Accept: application/json
 
-### GET request with a header
-GET http://127.0.0.1:8080/api.php/films/title/abc
+### GET by film title
+GET http://127.0.0.1:8080/api.php/films/title/Blazing
 Accept: application/json

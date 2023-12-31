@@ -70,16 +70,18 @@ class FilmModel
 
     }
 
-
-
     public function getByTitle($title)
     {
-        return $this->genericQuery->fetch("SELECT title, format FROM films LIMIT 1");
+        $query = "SELECT title, format FROM films WHERE title LIKE '%$title%' ";
+        error_log($query);
+        return $this->genericQuery->fetch($query);
     }
 
-    public function getByActor()
+    public function getByActor($actor)
     {
-
+        $query = "SELECT title, format, fullname FROM films JOIN casted ON films.id = casted.film_id JOIN actors ON casted.actor_id = actors.id  ";
+        error_log($query);
+        return $this->genericQuery->fetch($query);
     }
     public function __construct($conn)
     {
