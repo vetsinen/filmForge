@@ -65,9 +65,9 @@ class FilmModel
     {
     }
 
-    public function DeleteFilm()
+    public function DeleteFilm($id)
     {
-
+        $query = "DELETE FROM films WHERE id=25";
     }
 
     public function getByTitle($title)
@@ -79,7 +79,7 @@ class FilmModel
 
     public function getByActor($actor)
     {
-        $query = "SELECT title, format, fullname FROM films JOIN casted ON films.id = casted.film_id JOIN actors ON casted.actor_id = actors.id  ";
+        $query = "SELECT title, format, release_year, fullname FROM films JOIN casted ON films.id = casted.film_id JOIN actors ON casted.actor_id = actors.id HAVING fullname='$actor'";
         error_log($query);
         return $this->genericQuery->fetch($query);
     }

@@ -5,3 +5,7 @@ Accept: application/json
 ### GET by film title
 GET http://127.0.0.1:8080/api.php/films/title/Blazing
 Accept: application/json
+
+### GET by actor fullname
+GET http://127.0.0.1:8080/api.php/films/title/Blazing
+Accept: application/json
