@@ -7,5 +7,17 @@ GET http://127.0.0.1:8080/api.php/films/title/Blazing
 Accept: application/json
 
 ### GET by actor fullname
-GET http://127.0.0.1:8080/api.php/films/title/Blazing
+GET http://127.0.0.1:8080/api.php/films/title/Casablanca
 Accept: application/json
+
+### POST add a film
+POST http://127.0.0.1:8080/api.php/films
+Accept: application/json
+Content-Type: application/json
+
+{
+  "title":"Percy Jackson and the Olympians",
+  "format": "VHS",
+  "release_year": 2023,
+  "actors": "Walker Scobell, Leah Jeffries,Aryan Simhadri"
+}

@@ -1,5 +1,6 @@
 <?php
 require_once (__DIR__.'/vendor/autoload.php');
+require_once (__DIR__.'/validate.php');
 class Router {
     private $routes = [];
     private $filmModel;
@@ -42,15 +43,23 @@ $router->addRoute('GET', '/api.php/films', function () use ($filmModel) {
 });
 
 $router->addRoute('GET', '/api.php/films/title/{title}', function ($title) use($filmModel) {
-    echo json_encode($filmModel->getByTitle($title));
+    $title = clearString($title);
+    if (strlen($title)>1)
+        echo json_encode(['status'=>'ok', 'data'=>$filmModel->getByTitle($title)]);
+    else
+        echo json_encode(['status'=>'error', 'msg'=>'too short search string']);
 });
 
 $router->addRoute('GET', '/api.php/films/actor/{fullname}', function ($fullname) use($filmModel) {
     echo json_encode($filmModel->getByTitle($fullname));
 });
 
-$router->addRoute('POST', '/api/post/{id}', function ($postId) {
-    echo "Creating a post with ID: $postId";
+$router->addRoute('POST', '/api.php/films', function () use ($filmModel) {
+    $data = filmDataValidator(json_decode(file_get_contents('php://input'), true));
+
+    $id = $filmModel->addFilm($data);
+    echo json_encode(['msg'=>"Creating a film with id: $id"]);
+//    echo json_encode($data);
 });
 
 // Set the content type to JSON
