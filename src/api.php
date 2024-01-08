@@ -38,7 +38,7 @@ $filmModel = new \Webdev\Filmforge\FilmModel(new \Webdev\Filmforge\GenericQuery(
 $router = new Router();
 
 $router->addRoute('GET', '/api.php/films', function () use ($filmModel) {
-    $jsonString = json_encode($filmModel->getList());
+    $jsonString = json_encode(['page'=>1, 'items'=>$filmModel->getList()]);
     echo $jsonString;
 });
 

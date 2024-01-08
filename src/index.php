@@ -14,16 +14,51 @@ $film = new Webdev\Filmforge\Film();
     <title>Films Page</title>
 </head>
 <body>
+<script src="//unpkg.com/alpinejs" defer></script>
 
-<section class="section">
-    <div class="container">
-        <h1 class="title">
-            Films Page
-        </h1>
-    </div>
-</section>
+<div class="container" x-data="{
+ greeting: 'hello, filmforge',
+ items: [],
+ fetchData: async function (url='api.php/films') {
+  try {
+    const response = await fetch(url);
+    if (!response.ok) {
+      throw new Error('Network response was not ok');
+    }
+    const rez = await response.json();
+    console.log(rez.items);
+    this.items = rez.items;
+  } catch (error) {
+    console.error('Error:', error.message);
+  }
+}
 
-<div class="container">
+ }"
+ x-init="fetchData"
+>
+    <h1 class="title" x-text="greeting">
+        Films Page
+    </h1>
+    <table class="table is-fullwidth">
+        <thead>
+        <tr>
+            <th>Title</th>
+            <th>Year</th>
+            <th>Format</th>
+        </tr>
+        </thead>
+        <tbody>
+        <template x-for="item in items" :key="item.id">
+        <tr>
+            <td x-text="item.title">Movie 1</td>
+            <td x-text="item.release_year">2022</td>
+            <td x-text="item.format">DVD</td>
+        </tr>
+        </template>
+        <!-- Add more rows as needed -->
+        </tbody>
+    </table>
+
     <div class="columns">
         <div class="column">
             <div class="box">

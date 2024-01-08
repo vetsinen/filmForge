@@ -37,7 +37,7 @@ class FilmModel
     }
     public function getList()
     {
-        $query = "SELECT title, release_year, format FROM films ORDER BY title LIMIT ".strval( ITEMS_PER_PAGE);
+        $query = "SELECT id, title, release_year, format FROM films ORDER BY title";// LIMIT ".strval( ITEMS_PER_PAGE);
         return  $this->genericQuery->fetch($query);
     }
     public function addFilm($film)
@@ -87,7 +87,7 @@ class FilmModel
 
     public function getByActor($actor)
     {
-        $query = "SELECT title, format, release_year, fullname FROM films JOIN casted ON films.id = casted.film_id JOIN actors ON casted.actor_id = actors.id HAVING fullname='$actor'";
+        $query = "SELECT  title, format, release_year, fullname FROM films JOIN casted ON films.id = casted.film_id JOIN actors ON casted.actor_id = actors.id HAVING fullname='$actor'";
         error_log($query);
         return $this->genericQuery->fetch($query);
     }
