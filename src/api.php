@@ -43,7 +43,7 @@ $router->addRoute('GET', '/api.php/films', function () use ($filmModel) {
 });
 
 $router->addRoute('GET', '/api.php/films/title/{title}', function ($title) use($filmModel) {
-    $title = clearString($title);
+    $title = clearString(urldecode($title));
     if (strlen($title)>1)
         echo json_encode(['status'=>'ok', 'data'=>$filmModel->getByTitle($title)]);
     else
@@ -51,7 +51,8 @@ $router->addRoute('GET', '/api.php/films/title/{title}', function ($title) use($
 });
 
 $router->addRoute('GET', '/api.php/films/actor/{fullname}', function ($fullname) use($filmModel) {
-    echo json_encode($filmModel->getByTitle($fullname));
+    $fullname = clearString(urldecode($fullname));
+    echo json_encode($filmModel->getByActor($fullname));
 });
 
 $router->addRoute('POST', '/api.php/films', function () use ($filmModel) {

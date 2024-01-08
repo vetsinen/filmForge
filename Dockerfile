@@ -24,6 +24,20 @@ RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local
 # Install project dependencies
 # RUN composer install --no-interaction --optimize-autoloader
 
+RUN chown -R www-data:www-data /var/www
+
+# Create a new user
+RUN adduser --disabled-password --gecos '' developer
+
+# Add user to the group
+RUN chown -R developer:www-data /var/www
+
+RUN chmod 755 /var/www
+
+# Switch to this user
+USER developer
+
+
 # Copy the application code to the container
 #COPY . /var/www/html/
 

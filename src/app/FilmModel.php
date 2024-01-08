@@ -20,35 +20,11 @@ class FilmModel
                 if ($i < 5) {
                     $s = explode(":", $line, 2);
                     if (sizeof($s)!==2) break;
-                    //$value = trim($s[1]);
-                    $film[] = filter_var(trim($s[1]), FILTER_SANITIZE_FULL_SPECIAL_CHARS);
+                    $film[] = clearString($s[1]);
                     $i++;
                 } else {
-                    $query = "SELECT id AS film_id FROM films WHERE title='$film[0]' AND release_year=$film[1] AND format='$film[2]' LIMIT 1";
-                    $rez = $this->genericQuery->fetch($query);
-                    if ($rez){$film_id= $rez[0]['film_id'];
-                    }
-                    else {
-                        $query = "INSERT INTO films(title, release_year, format) VALUES('$film[0]',$film[1],'$film[2]')";
-                        $film_id = $this->genericQuery->insertAndProvideId($query);
-                    }
-
                     $actors = explode(',', $film[3]);
-                    foreach ($actors as $actor) {
-                        $actor = trim($actor);
 
-                        if (strlen($actor)<2) continue;
-                        $query = "SELECT id as actor_id FROM actors WHERE fullname='$actor' LIMIT 1";
-                        $rez = $this->genericQuery->fetch($query);
-                        if (!$rez) {
-                            $query = "INSERT INTO actors(fullname) VALUES('$actor')";
-                            $actor_id = $this->genericQuery->insertAndProvideId($query);
-                        } else {
-                            $actor_id = $rez[0]['actor_id'];
-                        }
-                        $query = "INSERT IGNORE INTO casted(film_id, actor_id) VALUES ($film_id, $actor_id)";
-                        $this->genericQuery->execute($query);
-                    }
 
                     $i = 1; $film = [];
                 }
@@ -66,13 +42,10 @@ class FilmModel
     }
     public function addFilm($film)
     {
-        //error_log('trying to insert '.json_encode($film));
+        error_log('trying to insert '.json_encode($film));
         $query = "SELECT id AS film_id FROM films WHERE title='$film[title]' AND release_year=$film[release_year] AND format='$film[format]' LIMIT 1";
         $rez = $this->genericQuery->fetch($query);
-        if ($rez)
-        {
-            $film_id= $rez[0]['film_id'];
-        }
+        if ($rez) {$film_id= $rez[0]['film_id'];}
         else
         {
             $query = "INSERT INTO films(title, release_year, format) VALUES('$film[title]',$film[release_year],'$film[format]')";
@@ -99,7 +72,10 @@ class FilmModel
 
     public function DeleteFilm($id)
     {
-        $query = "DELETE FROM films WHERE id=25";
+        $query = "DELETE FROM films WHERE id=$id";
+        $this->genericQuery->execute($query);
+        $query = "DELETE FROM casted WHERE film_id=$id";
+        $this->genericQuery->execute($query);
     }
 
     public function getByTitle($title)

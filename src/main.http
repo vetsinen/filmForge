@@ -3,11 +3,11 @@ GET http://127.0.0.1:8080/api.php/films
 Accept: application/json
 
 ### GET by film title
-GET http://127.0.0.1:8080/api.php/films/title/Blazing
+GET http://127.0.0.1:8080/api.php/films/title/Casablanca
 Accept: application/json
 
 ### GET by actor fullname
-GET http://127.0.0.1:8080/api.php/films/title/Casablanca
+GET http://127.0.0.1:8080/api.php/films/actor/Robert Redford
 Accept: application/json
 
 ### POST add a film
@@ -21,3 +21,7 @@ Content-Type: application/json
   "release_year": 2023,
   "actors": "Walker Scobell, Leah Jeffries,Aryan Simhadri"
 }
+
+### DELETE by film id
+DELETE http://127.0.0.1:8080/api.php/films/55
+Accept: application/json
