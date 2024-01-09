@@ -42,6 +42,12 @@ $router->addRoute('GET', '/api.php/films', function () use ($filmModel) {
     echo $jsonString;
 });
 
+$router->addRoute('DELETE', '/api.php/films/{id}', function ($id) use($filmModel) {
+    $id = strval(clearString(urldecode($id)));
+    $filmModel->deleteFilm($id);
+    echo json_encode(['status'=>'ok', 'data'=>$id]);
+});
+
 $router->addRoute('GET', '/api.php/films/title/{title}', function ($title) use($filmModel) {
     $title = clearString(urldecode($title));
     if (strlen($title)>1)

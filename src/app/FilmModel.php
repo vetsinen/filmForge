@@ -70,7 +70,7 @@ class FilmModel
         return $film_id;
     }
 
-    public function DeleteFilm($id)
+    public function deleteFilm($id)
     {
         $query = "DELETE FROM films WHERE id=$id";
         $this->genericQuery->execute($query);

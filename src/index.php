@@ -11,18 +11,20 @@ $film = new Webdev\Filmforge\Film();
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.9.3/css/bulma.min.css">
-    <title>Films Page</title>
+    <title>FilmForge</title>
 </head>
 <body>
 <script src="//unpkg.com/alpinejs" defer></script>
 
 <div class="container" x-data="{
  greeting: 'hello, filmforge',
+ addingFilmMode: true,
  title: '',
  release_year: 2020,
  format: 'VHS',
- actors : '',
+ actors : 'Tom Hanks, Leonardo DiCaprio, Meryl Streep, Denzel Washington, Jennifer Lawrence',
  items: [],
+ url: 'api.php/films',
  randomFilmTitle: function () {
   const adjectives = ['beautiful', 'colorful', 'mysterious', 'ancient', 'modern'];
   const nouns = ['landscape', 'adventure', 'journey', 'dream', 'experience'];
@@ -32,8 +34,9 @@ $film = new Webdev\Filmforge\Film();
   const randomSentence = `The ${getRandomItem(adjectives)} ${getRandomItem(nouns)} is always a ${getRandomItem(adjectives)} ${getRandomItem(nouns)}.`;
 
   return randomSentence;
-}
- fetchData: async function (url='api.php/films') {
+},
+ initData: async function (url='api.php/films') {
+ this.title = this.randomFilmTitle();
   try {
     const response = await fetch(url);
     if (!response.ok) {
@@ -45,12 +48,31 @@ $film = new Webdev\Filmforge\Film();
   } catch (error) {
     console.error('Error:', error.message);
   }
-}
+},
+ postData: async function () {
+  const response = await fetch('api.php/films', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json'
+    },
+    body: JSON.stringify({title: this.title, release_year: this.release_year, format: this.format, actors: this.actors})
+  });
+  this.initData();
+  this.addingFilmMode=false;
+ },
+ deleteFilm: async function (id) {
+ const response = await fetch(this.url+'/'+id, {
+    method: 'DELETE',
+    headers: {
+      'Content-Type': 'application/json'
+    }
+  });
+  this.initData();
+ }
 
  }"
- x-init="fetchData"
+ x-init="initData"
 >
-
 
     <div class="columns">
         <div class="column">
@@ -62,11 +84,11 @@ $film = new Webdev\Filmforge\Film();
         </div>
         <div class="column">
             <p class="has-text-right">
-                <button class="button is-info">Add film</button>
+                <button x-on:click="addingFilmMode=!addingFilmMode" class="button is-info">Add film</button>
             </p>
         </div>
     </div>
-    <form>
+    <form x-show="addingFilmMode">
         <div class="field">
             <label class="label">Title</label>
             <div class="control">
@@ -77,14 +99,14 @@ $film = new Webdev\Filmforge\Film();
         <div class="field">
             <label class="label">Release Year</label>
             <div class="control">
-                <input class="input" type="text" value="2020" placeholder="Enter release year">
+                <input class="input" type="text" x-model="release_year" placeholder="Enter release year">
             </div>
         </div>
 
         <div class="field">
             <label class="label">Format</label>
             <div class="control">
-                <div class="select">
+                <div class="select" x-model="format">
                     <select>
                         <option>Select format</option>
                         <option>DVD</option>
@@ -98,13 +120,13 @@ $film = new Webdev\Filmforge\Film();
         <div class="field">
             <label class="label">Actors</label>
             <div class="control">
-                <textarea class="textarea" placeholder="Enter actors' names">Tom Hanks, Leonardo DiCaprio, Meryl Streep, Denzel Washington, Jennifer Lawrence</textarea>
+                <input class="input" x-model="actors" placeholder="Enter actors' names">
             </div>
         </div>
 
         <div class="field is-grouped">
             <div class="control">
-                <button class="button is-primary" type="submit">Submit</button>
+                <button x-on:click="postData" class="button is-primary" type="button">Submit</button>
             </div>
             <div class="control">
                 <button class="button is-link" type="reset">Reset</button>
@@ -129,7 +151,7 @@ $film = new Webdev\Filmforge\Film();
             <td x-text="item.format">DVD</td>
             <td>
                 <button class="button is-primary">see details</button>
-                <button class="button is-danger">delete film</button>
+                <button class="button is-danger" x-on:click="deleteFilm(item.id)">delete film</button>
             </td>
 
         </tr>
@@ -138,7 +160,7 @@ $film = new Webdev\Filmforge\Film();
         </tbody>
     </table>
 
-    <div class="columns">
+    <div id="upload-file" class="columns">
         <div class="column">
             <div class="box">
                 <p class="title is-5">uploading column</p>
