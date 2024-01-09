@@ -18,7 +18,21 @@ $film = new Webdev\Filmforge\Film();
 
 <div class="container" x-data="{
  greeting: 'hello, filmforge',
+ title: '',
+ release_year: 2020,
+ format: 'VHS',
+ actors : '',
  items: [],
+ randomFilmTitle: function () {
+  const adjectives = ['beautiful', 'colorful', 'mysterious', 'ancient', 'modern'];
+  const nouns = ['landscape', 'adventure', 'journey', 'dream', 'experience'];
+
+  const getRandomItem = array => array[Math.floor(Math.random() * array.length)];
+
+  const randomSentence = `The ${getRandomItem(adjectives)} ${getRandomItem(nouns)} is always a ${getRandomItem(adjectives)} ${getRandomItem(nouns)}.`;
+
+  return randomSentence;
+}
  fetchData: async function (url='api.php/films') {
   try {
     const response = await fetch(url);
@@ -36,15 +50,75 @@ $film = new Webdev\Filmforge\Film();
  }"
  x-init="fetchData"
 >
-    <h1 class="title" x-text="greeting">
-        Films Page
-    </h1>
+
+
+    <div class="columns">
+        <div class="column">
+            <p class="has-text-left">
+            <h1 class="title" x-text="greeting">
+                Films Page
+            </h1>
+            </p>
+        </div>
+        <div class="column">
+            <p class="has-text-right">
+                <button class="button is-info">Add film</button>
+            </p>
+        </div>
+    </div>
+    <form>
+        <div class="field">
+            <label class="label">Title</label>
+            <div class="control">
+                <input class="input" x-model="title" type="text" placeholder="Enter film title">
+            </div>
+        </div>
+
+        <div class="field">
+            <label class="label">Release Year</label>
+            <div class="control">
+                <input class="input" type="text" value="2020" placeholder="Enter release year">
+            </div>
+        </div>
+
+        <div class="field">
+            <label class="label">Format</label>
+            <div class="control">
+                <div class="select">
+                    <select>
+                        <option>Select format</option>
+                        <option>DVD</option>
+                        <option selected>Blu-ray</option>
+                        <option>VHS</option>
+                    </select>
+                </div>
+            </div>
+        </div>
+
+        <div class="field">
+            <label class="label">Actors</label>
+            <div class="control">
+                <textarea class="textarea" placeholder="Enter actors' names">Tom Hanks, Leonardo DiCaprio, Meryl Streep, Denzel Washington, Jennifer Lawrence</textarea>
+            </div>
+        </div>
+
+        <div class="field is-grouped">
+            <div class="control">
+                <button class="button is-primary" type="submit">Submit</button>
+            </div>
+            <div class="control">
+                <button class="button is-link" type="reset">Reset</button>
+            </div>
+        </div>
+    </form>
+
     <table class="table is-fullwidth">
         <thead>
         <tr>
             <th>Title</th>
             <th>Year</th>
             <th>Format</th>
+            <th>Actions</th>
         </tr>
         </thead>
         <tbody>
@@ -53,6 +127,11 @@ $film = new Webdev\Filmforge\Film();
             <td x-text="item.title">Movie 1</td>
             <td x-text="item.release_year">2022</td>
             <td x-text="item.format">DVD</td>
+            <td>
+                <button class="button is-primary">see details</button>
+                <button class="button is-danger">delete film</button>
+            </td>
+
         </tr>
         </template>
         <!-- Add more rows as needed -->
