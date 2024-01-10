@@ -1,5 +1,12 @@
 DELETE FROM casted; DELETE FROM actors; DELETE FROM films; DELETE FROM users;
 
+DROP TABLE IF EXISTS `users`;
+CREATE TABLE users (
+                       id INT AUTO_INCREMENT PRIMARY KEY,
+                       username VARCHAR(255) UNIQUE NOT NULL,
+                       hashedpassword VARCHAR(255) NOT NULL
+);
+
 DROP TABLE IF EXISTS `films`;
 CREATE TABLE `films` (
                          `id` int NOT NULL AUTO_INCREMENT,

@@ -1,3 +1,33 @@
+### POST add a user
+POST http://127.0.0.1:8080/api.php/users
+Accept: application/json
+Content-Type: application/json
+
+{
+  "user":"root",
+  "password": "supagudVHS"
+}
+
+### POST add a user
+POST http://127.0.0.1:8080/api.php/auth/register
+Accept: application/json
+Content-Type: application/json
+
+{
+  "user":"root",
+  "password": "supagudVHS"
+}
+
+### POST login a user
+POST http://127.0.0.1:8080/api.php/auth/login
+Accept: application/json
+Content-Type: application/json
+
+{
+  "username":"root",
+  "password": "supagudVHS"
+}
+
 ### GET films
 GET http://127.0.0.1:8080/api.php/films
 Accept: application/json

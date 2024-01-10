@@ -34,7 +34,10 @@ class Router {
     }
 }
 
-$filmModel = new \Webdev\Filmforge\FilmModel(new \Webdev\Filmforge\GenericQuery());
+$gc = new \Webdev\Filmforge\GenericQuery();
+$filmModel = new \Webdev\Filmforge\FilmModel($gc);
+$userModel = new \Webdev\Filmforge\UserModel($gc);
+
 $router = new Router();
 
 $router->addRoute('GET', '/api.php/films', function () use ($filmModel) {
@@ -67,6 +70,24 @@ $router->addRoute('POST', '/api.php/films', function () use ($filmModel) {
     $id = $filmModel->addFilm($data);
     echo json_encode(['msg'=>"Creating a film with id: $id"]);
 //    echo json_encode($data);
+});
+
+$router->addRoute('POST', '/api.php/auth/register', function () use ($userModel) {
+    $data = filmDataValidator(json_decode(file_get_contents('php://input'), true));
+    echo json_encode(['msg'=>"error, while creation user"]); return;
+
+    $id = $userModel->addUser($data);
+    if ($id) echo json_encode(['msg'=>"Creating a user with id: $id"]);
+    else echo json_encode(['msg'=>"error, while creation user"]);
+});
+
+$router->addRoute('POST', '/api.php/auth/login', function () use ($userModel) {
+    $data = (json_decode(file_get_contents('php://input'), true));
+    error_log('user: '.json_encode($data));
+
+    $rez = $userModel->loginUser($data);
+    if (!$rez) {echo json_encode(['status'=>'error', 'msg'=>"error, while logining user"]); return;}
+    echo json_encode(['id'=>$rez,'status'=>'ok', 'msg'=>"logined user $rez"]); return;
 });
 
 // Set the content type to JSON

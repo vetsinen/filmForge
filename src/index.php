@@ -3,7 +3,7 @@ session_start();
 require_once(__DIR__ . '/vendor/autoload.php');
 
 $log = new Monolog\Logger('name');
-$film = new Webdev\Filmforge\Film();
+
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -19,6 +19,7 @@ $film = new Webdev\Filmforge\Film();
 <div class="container" x-data="{
  greeting: 'hello, filmforge',
  addingFilmMode: true,
+ authMode: true,
  title: '',
  release_year: 2020,
  format: 'VHS',
@@ -74,6 +75,79 @@ $film = new Webdev\Filmforge\Film();
  x-init="initData"
 >
 
+    <div id="auth" x-show="authMode" class="columns">
+        <!-- First Column -->
+        <div class="column is-half">
+            <div class="box">
+                <h1 class="title is-4 has-text-centered">Login</h1>
+
+                <!-- Login Form -->
+                <form action="login.php" method="post">
+                    <div class="field">
+                        <label class="label">Username</label>
+                        <div class="control">
+                            <input class="input" type="text" name="username" placeholder="Enter your username" required>
+                        </div>
+                    </div>
+
+                    <div class="field">
+                        <label class="label">Password</label>
+                        <div class="control">
+                            <input class="input" type="password" name="password" placeholder="Enter your password" required>
+                        </div>
+                    </div>
+
+                    <div class="field">
+                        <div class="control">
+                            <button class="button is-primary is-fullwidth" type="submit">Login</button>
+                        </div>
+                    </div>
+                </form>
+                <!-- End Login Form -->
+
+            </div>
+        </div>
+
+        <!-- Second Column -->
+        <div class="column is-half">
+            <div class="box">
+                <h1 class="title is-4 has-text-centered">User Registration</h1>
+
+                <!-- Registration Form -->
+                <form action="register.php" method="post">
+                    <div class="field">
+                        <label class="label">Username</label>
+                        <div class="control">
+                            <input class="input" type="text" name="username" placeholder="Enter your username" required>
+                        </div>
+                    </div>
+
+                    <div class="field">
+                        <label class="label">Password</label>
+                        <div class="control">
+                            <input class="input" type="password" name="password" placeholder="Enter your password" required>
+                        </div>
+                    </div>
+
+                    <div class="field">
+                        <label class="label">Confirm Password</label>
+                        <div class="control">
+                            <input class="input" type="password" name="confirm_password" placeholder="Confirm your password" required>
+                        </div>
+                    </div>
+
+                    <div class="field">
+                        <div class="control">
+                            <button class="button is-primary is-fullwidth" type="submit">Register</button>
+                        </div>
+                    </div>
+                </form>
+                <!-- End Registration Form -->
+
+            </div>
+        </div>
+    </div>
+
     <div class="columns">
         <div class="column">
             <p class="has-text-left">
@@ -84,7 +158,8 @@ $film = new Webdev\Filmforge\Film();
         </div>
         <div class="column">
             <p class="has-text-right">
-                <button x-on:click="addingFilmMode=!addingFilmMode" class="button is-info">Add film</button>
+                <button x-on:click="authMode=!authMode" class="button is-info">show login and register form</button>
+                <button x-on:click="addingFilmMode=!addingFilmMode" class="button is-info">show film adding form</button>
             </p>
         </div>
     </div>
