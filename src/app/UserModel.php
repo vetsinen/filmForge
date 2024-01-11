@@ -14,6 +14,7 @@ class UserModel
 
     public function addUser($user)
     {
+        error_log(json_encode($user));
         $hashed = hash('sha256', $user['password']);
         $query = "INSERT INTO users(username, hashedpassword) VALUES('$user[username]','$hashed')";
         $rez = $this->genericQuery->insertAndProvideId($query);

@@ -47,8 +47,9 @@ $router->addRoute('GET', '/api.php/films', function () use ($filmModel) {
 });
 
 $router->addRoute('DELETE', '/api.php/films/{id}', function ($id) use($filmModel) {
+    if (!isset($_SESSION['userid'])) {echo json_encode(['status'=>'error']);}
     $id = strval(clearString(urldecode($id)));
-    $filmModel->deleteFilm($id);
+    $filmModel->deleteFilm($id, $_SESSION['userid']);
     echo json_encode(['status'=>'ok', 'data'=>$id]);
 });
 
@@ -66,30 +67,35 @@ $router->addRoute('GET', '/api.php/films/actor/{fullname}', function ($fullname)
 });
 
 $router->addRoute('POST', '/api.php/films', function () use ($filmModel) {
+    if (!isset($_SESSION['userid'])) {echo json_encode(['status'=>'error', 'msg'=>"error, while creation film"]); return;}
     $data = filmDataValidator(json_decode(file_get_contents('php://input'), true));
 
-    $id = $filmModel->addFilm($data);
+    $id = $filmModel->addFilm($data,$_SESSION['userid']);
     echo json_encode(['msg'=>"Creating a film with id: $id"]);
 //    echo json_encode($data);
 });
 
 $router->addRoute('POST', '/api.php/auth/register', function () use ($userModel) {
-    $data = filmDataValidator(json_decode(file_get_contents('php://input'), true));
-    echo json_encode(['msg'=>"error, while creation user"]); return;
+    $data = clearUser(json_decode(file_get_contents('php://input'), true));
 
     $id = $userModel->addUser($data);
-    if ($id) echo json_encode(['msg'=>"Creating a user with id: $id"]);
-    else echo json_encode(['msg'=>"error, while creation user"]);
+    if ($id)  {echo json_encode(['status'=>'ok', 'id'=> $id,'msg'=>"Creating a user with id: $id"]);$_SESSION['userid']=strval($id);}
+    else echo json_encode(['status'=>'error', 'msg'=>"error, while creation user"]);
 });
 
 $router->addRoute('POST', '/api.php/auth/login', function () use ($userModel) {
-    $data = (json_decode(file_get_contents('php://input'), true));
+    $data = clearUser(json_decode(file_get_contents('php://input'), true));
     error_log('user: '.json_encode($data));
 
     $rez = $userModel->loginUser($data);
     if (!$rez) {echo json_encode(['status'=>'error', 'msg'=>"error, while logining user"]); return;}
     $_SESSION['userid']=strval($rez);
     echo json_encode(['id'=>$rez,'status'=>'ok', 'msg'=>"logined user $rez"]); return;
+});
+
+$router->addRoute('GET', '/api.php/auth/logout', function ()  {
+    $_SESSION['userid']=0;
+    echo json_encode(['id'=>0,'status'=>'ok', 'msg'=>"logged out"]); return;
 });
 
 // Set the content type to JSON

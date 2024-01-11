@@ -1,5 +1,6 @@
 <?php
 session_start();
+//$_SESSION['userid']=0;
 require_once(__DIR__ . '/vendor/autoload.php');
 
 $log = new Monolog\Logger('name');
@@ -17,9 +18,9 @@ $log = new Monolog\Logger('name');
 <script src="//unpkg.com/alpinejs" defer></script>
 
 <div class="container" x-data="{
- greeting: 'hello, filmforge',
- addingFilmMode: true,
- authMode: true,
+ greeting: 'filmforge app ',
+ addingFilmMode: this.userid>0,
+
  title: '',
  release_year: 2020,
  format: 'VHS',
@@ -28,8 +29,9 @@ $log = new Monolog\Logger('name');
 
  username: 'root',
  password: 'supagudVHS',
- userid: undefined,
-
+ password2: 'supagudVHS',
+ userid: <?php echo $_SESSION['userid'] ?>,
+  authMode: <?php echo $_SESSION['userid'] ?><1,
  url: 'api.php/films',
  randomFilmTitle: function () {
   const adjectives = ['beautiful', 'colorful', 'mysterious', 'ancient', 'modern'];
@@ -88,32 +90,52 @@ $log = new Monolog\Logger('name');
     }
     const rez = await response.json();
     console.log(rez);
-    this.userid = rez.id;
+    if (rez.status==='ok') {this.userid = rez.id; this.authMode=false}
+ },
+ register: async function () {
+  if (this.password!==this.password2) {alert('please, confirm a password'); return;}
+  const response = await fetch('api.php/auth/register', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json'
+    },
+    body: JSON.stringify({username: this.username, password: this.password})
+  });
+  if (!response.ok) {
+      throw new Error('Network response was not ok');
+    }
+    const rez = await response.json();
+    console.log(rez);
+    if (rez.status==='ok') {this.userid = rez.id; this.authMode=false;}
+ },
+ logout: async function() {
+ this.userid = 0;
+ const response = await fetch('api.php/auth/logout');
  }
 
  }"
+
  x-init="initData"
 >
 
-    <div id="auth" x-show="authMode" class="columns">
-        <!-- First Column -->
-        <div class="column is-half">
+    <div  id="auth" x-show="authMode" class="columns">
+        <!-- Login Column -->
+        <div id="login" class="column is-half">
             <div class="box">
                 <h1 class="title is-4 has-text-centered">Login</h1>
-
                 <!-- Login Form -->
-                <form action="" method="post">
+                <form  action="" method="post">
                     <div class="field">
-                        <label x-model="username" class="label">Username</label>
+                        <label class="label">Username</label>
                         <div class="control">
-                            <input class="input" type="text" name="username" placeholder="Enter your username" required>
+                            <input x-model="username" class="input" type="text" name="username" placeholder="Enter your username" required>
                         </div>
                     </div>
 
                     <div class="field">
-                        <label x-model="password" class="label">Password</label>
+                        <label class="label">Password</label>
                         <div class="control">
-                            <input class="input" type="password" name="password" placeholder="Enter your password" required>
+                            <input x-model="password" class="input" type="password" name="password" placeholder="Enter your password" required>
                         </div>
                     </div>
 
@@ -128,8 +150,8 @@ $log = new Monolog\Logger('name');
             </div>
         </div>
 
-        <!-- Second Column -->
-        <div class="column is-half">
+        <!-- Register Column -->
+        <div id="register" class="column is-half">
             <div class="box">
                 <h1 class="title is-4 has-text-centered">User Registration</h1>
 
@@ -138,27 +160,27 @@ $log = new Monolog\Logger('name');
                     <div class="field">
                         <label class="label">Username</label>
                         <div class="control">
-                            <input class="input" type="text" name="username" placeholder="Enter your username" required>
+                            <input x-model="username" class="input" type="text" name="username" placeholder="Enter your username" required>
                         </div>
                     </div>
 
                     <div class="field">
                         <label class="label">Password</label>
                         <div class="control">
-                            <input class="input" type="password" name="password" placeholder="Enter your password" required>
+                            <input x-model="password" class="input" type="password" name="password" placeholder="Enter your password" required>
                         </div>
                     </div>
 
                     <div class="field">
                         <label class="label">Confirm Password</label>
                         <div class="control">
-                            <input class="input" type="password" name="confirm_password" placeholder="Confirm your password" required>
+                            <input x-model="password2" class="input" type="password" name="confirm_password" placeholder="Confirm your password" required>
                         </div>
                     </div>
 
                     <div class="field">
                         <div class="control">
-                            <button class="button is-primary is-fullwidth" type="submit">Register</button>
+                            <button x-on:click="register" class="button is-primary is-fullwidth" type="button">Register</button>
                         </div>
                     </div>
                 </form>
@@ -168,23 +190,24 @@ $log = new Monolog\Logger('name');
         </div>
     </div>
 
-    <div class="columns">
+    <div id="header" class="columns">
         <div class="column">
             <p class="has-text-left">
             <h1 class="title">
-                <span x-text="greeting">Films Page</span><span>, user id is: <?php echo $_SESSION['userid'] ?></span>
+                <span x-text="greeting">Films Page</span><span>, user id is: <span x-text="userid"></span></span>
             </h1>
             </p>
         </div>
         <div class="column">
             <p class="has-text-right">
                 <button x-on:click="authMode=!authMode" class="button is-light">show/hide login and register form</button>
-                <button class="button is-light is-small">Logout</button>
-                <button x-on:click="addingFilmMode=!addingFilmMode" class="button is-light">show/hide film adding form</button>
+                <button x-show="userid" x-on:click="logout" class="button is-light is-small">Logout</button>
+                <button x-show="userid>0" x-on:click="addingFilmMode=!addingFilmMode" class="button is-light">show/hide film adding form</button>
             </p>
         </div>
     </div>
-    <form x-show="addingFilmMode">
+
+    <form id="filmAddingForm" x-show="addingFilmMode">
         <div class="field">
             <label class="label">Title</label>
             <div class="control">
@@ -230,7 +253,7 @@ $log = new Monolog\Logger('name');
         </div>
     </form>
 
-    <table class="table is-fullwidth">
+    <table id="films" class="table is-fullwidth">
         <thead>
         <tr>
             <th>Title</th>
@@ -247,7 +270,7 @@ $log = new Monolog\Logger('name');
             <td x-text="item.format">DVD</td>
             <td>
                 <button class="button is-primary">see details</button>
-                <button class="button is-danger" x-on:click="deleteFilm(item.id)">delete film</button>
+                <button x-show="userid===item.user_id" class="button is-danger" x-on:click="deleteFilm(item.id)">delete film</button>
             </td>
 
         </tr>
@@ -256,7 +279,7 @@ $log = new Monolog\Logger('name');
         </tbody>
     </table>
 
-    <div id="upload-file" class="columns">
+    <div x-show="userid>0" id="upload-file" class="columns">
         <div class="column">
             <div class="box">
                 <p class="title is-5">uploading column</p>

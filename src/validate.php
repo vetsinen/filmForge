@@ -4,6 +4,13 @@ function clearString(string $string):string
 {
     return filter_var(mb_trim($string), FILTER_SANITIZE_FULL_SPECIAL_CHARS);
 }
+
+function clearUser($data)
+{
+    $data['username'] = clearString($data['username']);
+    $data['password'] = clearString($data['password']);
+    return $data;
+}
 function mb_trim($string, $trim_chars = '\s'){
     return preg_replace('/^['.$trim_chars.']*(?U)(.*)['.$trim_chars.']*$/u', '\\1',$string);
 }

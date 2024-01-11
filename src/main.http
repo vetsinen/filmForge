@@ -1,10 +1,10 @@
 ### POST add a user
-POST http://127.0.0.1:8080/api.php/users
+POST http://127.0.0.1:8080/api.php/auth/register
 Accept: application/json
 Content-Type: application/json
 
 {
-  "user":"root",
+  "username":"root2",
   "password": "supagudVHS"
 }
 
@@ -14,7 +14,7 @@ Accept: application/json
 Content-Type: application/json
 
 {
-  "user":"root",
+  "username":"root9",
   "password": "supagudVHS"
 }
 

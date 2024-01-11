@@ -37,10 +37,10 @@ class FilmModel
     }
     public function getList()
     {
-        $query = "SELECT id, title, release_year, format FROM films ORDER BY title";// LIMIT ".strval( ITEMS_PER_PAGE);
+        $query = "SELECT id, title, release_year, format, user_id FROM films ORDER BY title";// LIMIT ".strval( ITEMS_PER_PAGE);
         return  $this->genericQuery->fetch($query);
     }
-    public function addFilm($film)
+    public function addFilm($film, $userid)
     {
         error_log('trying to insert '.json_encode($film));
         $query = "SELECT id AS film_id FROM films WHERE title='$film[title]' AND release_year=$film[release_year] AND format='$film[format]' LIMIT 1";
@@ -48,7 +48,7 @@ class FilmModel
         if ($rez) {$film_id= $rez[0]['film_id'];}
         else
         {
-            $query = "INSERT INTO films(title, release_year, format) VALUES('$film[title]',$film[release_year],'$film[format]')";
+            $query = "INSERT INTO films(title, release_year, format, user_id) VALUES('$film[title]',$film[release_year],'$film[format]', $userid)";
             $film_id = $this->genericQuery->insertAndProvideId($query);
         }
 
@@ -70,8 +70,10 @@ class FilmModel
         return $film_id;
     }
 
-    public function deleteFilm($id)
+    public function deleteFilm($id, $userid)
     {
+        $rez = $this->genericQuery->fetch("SELECT user_id FROM films WHERE id=$id");
+        if (!$rez || $rez[0]['user_id']!==$userid) return;
         $query = "DELETE FROM films WHERE id=$id";
         $this->genericQuery->execute($query);
         $query = "DELETE FROM casted WHERE film_id=$id";

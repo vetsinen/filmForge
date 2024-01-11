@@ -10,14 +10,11 @@ function abnormalFin()
     exit();
 }
 
-//if (isset($_SESSION['userid']) )
-
+if (!isset($_SESSION['userid'])) {abnormalFin();}
 if ($_SERVER["REQUEST_METHOD"] !== "POST" || !isset($_FILES["file"]) || $_FILES["file"]["error"] !== UPLOAD_ERR_OK) abnormalFin();
 $target_file = __DIR__ . "/upload/" . basename($_FILES["file"]["name"]);
 
 if (!move_uploaded_file($_FILES["file"]["tmp_name"], $target_file)) abnormalFin();
-
-//chmod($target_file, 0777);
 
 $filmModel = new \Webdev\Filmforge\FilmModel(new \Webdev\Filmforge\GenericQuery());
 $file = fopen($target_file, 'r');
@@ -41,7 +38,7 @@ while (!feof($file)) {
             'actors' => $film[3]
         ];
 
-        $filmModel->addFilm($film);
+        $filmModel->addFilm($film, $_SESSION['userid']);
         $i = 1;
         $film = [];
     }
