@@ -25,6 +25,11 @@ $log = new Monolog\Logger('name');
  format: 'VHS',
  actors : 'Tom Hanks, Leonardo DiCaprio, Meryl Streep, Denzel Washington, Jennifer Lawrence',
  items: [],
+
+ username: 'root',
+ password: 'supagudVHS',
+ userid: undefined,
+
  url: 'api.php/films',
  randomFilmTitle: function () {
   const adjectives = ['beautiful', 'colorful', 'mysterious', 'ancient', 'modern'];
@@ -69,6 +74,21 @@ $log = new Monolog\Logger('name');
     }
   });
   this.initData();
+ },
+ login: async function () {
+  const response = await fetch('api.php/auth/login', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json'
+    },
+    body: JSON.stringify({username: this.username, password: this.password})
+  });
+  if (!response.ok) {
+      throw new Error('Network response was not ok');
+    }
+    const rez = await response.json();
+    console.log(rez);
+    this.userid = rez.id;
  }
 
  }"
@@ -82,16 +102,16 @@ $log = new Monolog\Logger('name');
                 <h1 class="title is-4 has-text-centered">Login</h1>
 
                 <!-- Login Form -->
-                <form action="login.php" method="post">
+                <form action="" method="post">
                     <div class="field">
-                        <label class="label">Username</label>
+                        <label x-model="username" class="label">Username</label>
                         <div class="control">
                             <input class="input" type="text" name="username" placeholder="Enter your username" required>
                         </div>
                     </div>
 
                     <div class="field">
-                        <label class="label">Password</label>
+                        <label x-model="password" class="label">Password</label>
                         <div class="control">
                             <input class="input" type="password" name="password" placeholder="Enter your password" required>
                         </div>
@@ -99,7 +119,7 @@ $log = new Monolog\Logger('name');
 
                     <div class="field">
                         <div class="control">
-                            <button class="button is-primary is-fullwidth" type="submit">Login</button>
+                            <button x-on:click="login" class="button is-primary is-fullwidth" type="button">Login</button>
                         </div>
                     </div>
                 </form>
@@ -151,15 +171,16 @@ $log = new Monolog\Logger('name');
     <div class="columns">
         <div class="column">
             <p class="has-text-left">
-            <h1 class="title" x-text="greeting">
-                Films Page
+            <h1 class="title">
+                <span x-text="greeting">Films Page</span><span>, user id is: <?php echo $_SESSION['userid'] ?></span>
             </h1>
             </p>
         </div>
         <div class="column">
             <p class="has-text-right">
-                <button x-on:click="authMode=!authMode" class="button is-info">show login and register form</button>
-                <button x-on:click="addingFilmMode=!addingFilmMode" class="button is-info">show film adding form</button>
+                <button x-on:click="authMode=!authMode" class="button is-light">show/hide login and register form</button>
+                <button class="button is-light is-small">Logout</button>
+                <button x-on:click="addingFilmMode=!addingFilmMode" class="button is-light">show/hide film adding form</button>
             </p>
         </div>
     </div>

@@ -1,4 +1,5 @@
 <?php
+session_start();
 require_once (__DIR__.'/vendor/autoload.php');
 require_once (__DIR__.'/validate.php');
 class Router {
@@ -87,6 +88,7 @@ $router->addRoute('POST', '/api.php/auth/login', function () use ($userModel) {
 
     $rez = $userModel->loginUser($data);
     if (!$rez) {echo json_encode(['status'=>'error', 'msg'=>"error, while logining user"]); return;}
+    $_SESSION['userid']=strval($rez);
     echo json_encode(['id'=>$rez,'status'=>'ok', 'msg'=>"logined user $rez"]); return;
 });
 
