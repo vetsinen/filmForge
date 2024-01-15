@@ -57,6 +57,14 @@ $log = new Monolog\Logger('name');
     console.error('Error:', error.message);
   }
 },
+ getFilmDetails: async function (id) {
+    const response = await fetch('api.php/films/'+id);
+    if (!response.ok) {
+      throw new Error('Network response was not ok');
+    }
+    const rez = await response.json();
+    alert('film actors: '+rez.actors);
+ },
  postData: async function () {
   const response = await fetch('api.php/films', {
     method: 'POST',
@@ -111,7 +119,8 @@ $log = new Monolog\Logger('name');
  logout: async function() {
  this.userid = 0;
  const response = await fetch('api.php/auth/logout');
- }
+ },
+ ffocus: function(id) {document.getElementById(id).focus();}
 
  }"
 
@@ -203,6 +212,7 @@ $log = new Monolog\Logger('name');
                 <button x-on:click="authMode=!authMode" class="button is-light">show/hide login and register form</button>
                 <button x-show="userid" x-on:click="logout" class="button is-light is-small">Logout</button>
                 <button x-show="userid>0" x-on:click="addingFilmMode=!addingFilmMode" class="button is-light">show/hide film adding form</button>
+                <button x-on:click="ffocus('film'+158)">goto film</button>
             </p>
         </div>
     </div>
@@ -269,7 +279,8 @@ $log = new Monolog\Logger('name');
             <td x-text="item.release_year">2022</td>
             <td x-text="item.format">DVD</td>
             <td>
-                <button class="button is-primary">see details</button>
+                <a x-bind:id="'film'+item.id"></a>
+                <button class="button is-primary" x-on:click="getFilmDetails(item.id)">see details</button>
                 <button x-show="userid===item.user_id" class="button is-danger" x-on:click="deleteFilm(item.id)">delete film</button>
             </td>
 
