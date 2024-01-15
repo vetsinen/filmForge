@@ -40,6 +40,12 @@ class FilmModel
         $query = "SELECT id, title, release_year, format, user_id FROM films ORDER BY title";// LIMIT ".strval( ITEMS_PER_PAGE);
         return  $this->genericQuery->fetch($query);
     }
+
+    public function getDetails($id)
+    {
+        $query = "SELECT GROUP_CONCAT(DISTINCT fullname) AS actors FROM actors INNER JOIN casted ON actors.id=casted.actor_id WHERE film_id=$id";
+        return $this->genericQuery->fetch($query);
+    }
     public function addFilm($film, $userid)
     {
         error_log('trying to insert '.json_encode($film));

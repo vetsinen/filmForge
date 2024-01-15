@@ -66,6 +66,11 @@ $router->addRoute('GET', '/api.php/films/actor/{fullname}', function ($fullname)
     echo json_encode($filmModel->getByActor($fullname));
 });
 
+$router->addRoute('GET', '/api.php/films/{id}', function ($id) use($filmModel) {
+    $id = clearString(urldecode($id));
+    echo json_encode($filmModel->getDetails($id)[0]);
+});
+
 $router->addRoute('POST', '/api.php/films', function () use ($filmModel) {
     if (!isset($_SESSION['userid'])) {echo json_encode(['status'=>'error', 'msg'=>"error, while creation film"]); return;}
     $data = filmDataValidator(json_decode(file_get_contents('php://input'), true));

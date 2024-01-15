@@ -32,6 +32,10 @@ Content-Type: application/json
 GET http://127.0.0.1:8080/api.php/films
 Accept: application/json
 
+### GET film details
+GET http://127.0.0.1:8080/api.php/films/139
+Accept: application/json
+
 ### GET by film title
 GET http://127.0.0.1:8080/api.php/films/title/Casablanca
 Accept: application/json
