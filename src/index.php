@@ -120,7 +120,11 @@ $log = new Monolog\Logger('name');
  this.userid = 0;
  const response = await fetch('api.php/auth/logout');
  },
- ffocus: function(id) {document.getElementById(id).focus();}
+ ffocus: function(id) {
+ const film = document.getElementById(id)
+ //document.getElementById(id).focus({ focusVisible: true });
+ film.scrollIntoView();
+ }
 
  }"
 
@@ -259,6 +263,19 @@ $log = new Monolog\Logger('name');
             </div>
             <div class="control">
                 <button class="button is-link" type="reset">Reset</button>
+            </div>
+        </div>
+    </form>
+
+    <form id="filmSearchForm">
+        <div class="field">
+            <label class="label">search by title</label>
+            <div class="control">
+                <input class="input" x-model="stitle" type="text" placeholder="Enter film title">
+            </div>
+            <label class="label">search by actor name</label>
+            <div class="control">
+                <input class="input" x-model="sfullname" type="text" placeholder="Enter actor fullname">
             </div>
         </div>
     </form>
